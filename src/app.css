@@ -1,0 +1,224 @@
+/* app.css */
+
+/* --- Variables (Light Mode Default) --- */
+:root {
+  /* Sand Theme - Light */
+  --primary-bg: #fdfbf7;
+  --glass-bg: rgba(255, 255, 255, 0.75);
+  --glass-border: rgba(198, 166, 100, 0.2);
+  --glass-shadow: 0 8px 32px 0 rgba(198, 166, 100, 0.1);
+  
+  --color-text-main: #2c3e50;
+  --color-text-muted: #6c757d;
+  --color-accent: #C6A664; /* Sand Yellow */
+  --color-accent-hover: #b09154;
+  
+  --input-bg: rgba(255, 255, 255, 0.9);
+  
+  /* Animated Blobs */
+  --blob-color-1: #fcebc4;
+  --blob-color-2: #e6d5a7;
+
+  --radius-lg: 25px;
+  
+  --bs-body-bg: var(--primary-bg);
+  --bs-body-color: var(--color-text-main);
+}
+
+/* --- Dark Mode Overrides --- */
+[data-bs-theme="dark"] {
+  /* Sand Theme - Dark */
+  --primary-bg: #1a1a1a;
+  --glass-bg: rgba(30, 30, 30, 0.7);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+  
+  --color-text-main: #f0f0f0;
+  --color-text-muted: #a0a0a0;
+  --color-accent: #d4b97d; /* Lighter sand for dark mode */
+  --color-accent-hover: #eaddb8;
+  
+  --input-bg: rgba(45, 45, 45, 0.6);
+  
+  --blob-color-1: #4a3e2a; /* Dark Sand */
+  --blob-color-2: #2e2a20;
+}
+
+/* --- Global & Reset --- */
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 120px;
+}
+
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  font-family: 'Poppins', system-ui, sans-serif;
+  overflow-x: hidden;
+  background: var(--primary-bg);
+  color: var(--color-text-main);
+  transition: background-color 0.5s ease, color 0.5s ease;
+}
+
+/* --- Animated Background Blobs --- */
+body::before,
+body::after {
+  content: '';
+  position: fixed;
+  width: 60vw;
+  height: 60vw;
+  border-radius: 50%;
+  z-index: -1;
+  filter: blur(80px);
+  opacity: 0.6;
+  animation: floatBlob 20s infinite alternate ease-in-out;
+  transition: background-color 0.5s ease;
+}
+
+body::before {
+  background: var(--blob-color-1);
+  top: -20%;
+  left: -20%;
+}
+
+body::after {
+  background: var(--blob-color-2);
+  bottom: -20%;
+  right: -20%;
+  animation-delay: -10s;
+}
+
+@keyframes floatBlob {
+  0% { transform: translate(0, 0) scale(1); }
+  100% { transform: translate(50px, 50px) scale(1.1); }
+}
+
+main {
+  flex: 1;
+  position: relative;
+  z-index: 1;
+}
+
+/* --- Glassmorphism Utilities --- */
+.glass, .glass-card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  color: var(--color-text-main);
+  transition: background 0.3s ease, border 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.glass-card {
+  border-radius: var(--radius-lg);
+}
+
+.glass-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 40px rgba(198, 166, 100, 0.2);
+}
+
+/* --- Inputs & Form Elements --- */
+.form-control, .form-range {
+  background-color: var(--input-bg) !important;
+  border: 1px solid var(--glass-border) !important;
+  color: var(--color-text-main) !important;
+  border-radius: 15px;
+}
+
+.form-control:focus {
+  background-color: var(--input-bg) !important;
+  box-shadow: 0 0 0 0.25rem rgba(198, 166, 100, 0.25);
+  border-color: var(--color-accent) !important;
+}
+
+/* Range Sliders */
+input[type=range]::-webkit-slider-thumb {
+  background: var(--color-accent);
+}
+
+/* --- Typography & Links --- */
+h1, h2, h3, h4, h5 {
+  font-weight: 700;
+  color: var(--color-accent);
+}
+
+.text-muted {
+  color: var(--color-text-muted) !important;
+}
+
+a {
+  text-decoration: none;
+  color: var(--color-text-main);
+}
+
+/* --- Buttons --- */
+button, .btn {
+  border-radius: 50px !important;
+  transition: all 0.2s ease-in-out !important;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.btn-primary {
+  background-color: var(--color-accent);
+  border-color: var(--color-accent);
+  color: #fff;
+}
+
+.btn-primary:hover {
+  background-color: var(--color-accent-hover);
+  border-color: var(--color-accent-hover);
+  transform: scale(1.05);
+}
+
+.btn-outline-secondary {
+  color: var(--color-text-main);
+  border-color: var(--glass-border);
+}
+
+.btn-outline-secondary:hover {
+  background-color: var(--glass-border);
+  color: var(--color-text-main);
+}
+
+/* Dark/Light mode overrides for Barcode Area */
+/* IMPORTANT: Barcodes must always have white background for scanning */
+.barcode-container {
+  background: #ffffff !important; 
+  padding: 3rem;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--glass-shadow);
+  margin: 2rem auto;
+  transition: all 0.3s ease;
+}
+
+.text-output {
+  background: #f8f9fa;
+  color: #333;
+  border-radius: 10px;
+  font-family: monospace;
+}
+
+/* Footer specific */
+.custom-footer {
+  background: var(--glass-bg);
+  backdrop-filter: blur(10px);
+  border-top: 1px solid var(--glass-border);
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-accent);
+  border-radius: 10px;
+  border: 2px solid var(--primary-bg);
+}
