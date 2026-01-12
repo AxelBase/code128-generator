@@ -1,18 +1,20 @@
 <script lang="ts">
-  import '../app.css'; // Ensure app.css is imported
+  import '../app.css';
   import { base } from '$app/paths';
   import { fly, slide } from 'svelte/transition';
   import { onMount } from 'svelte';
-  
-  // PayPal Configuration
-  const paypalUsername = 'AxelLab427'; // Replace with your PayPal.Me username427
+
+  // PayPal Configuration (kept from file 2)
+  const paypalUsername = 'AxelLab427';
   const donationAmounts = [1, 3, 5, 10];
-  
+
+  // Buy Me a Coffee link (from file 1)
+  const bmacLink = 'https://buymeacoffee.com/axelbase';
+
   let isDropdownOpen = false;
   let currentTheme = 'light';
 
   onMount(() => {
-    // Check for saved theme preference or default to light
     const savedTheme = localStorage.getItem('theme') || 'light';
     setTheme(savedTheme);
   });
@@ -27,15 +29,15 @@
     const newTheme = currentTheme === 'light' ? 'dark' : 'light';
     setTheme(newTheme);
   }
-  
+
   function toggleDropdown() {
     isDropdownOpen = !isDropdownOpen;
   }
-  
+
   function closeDropdown() {
     isDropdownOpen = false;
   }
-  
+
   // Click Outside Action
   function clickOutside(node: HTMLElement) {
     const handleClick = (event: MouseEvent) => {
@@ -71,36 +73,66 @@
 </svelte:head>
 
 <div class="min-vh-100 d-flex flex-column">
-  
+
   <header class="fixed-top p-3 w-100" style="pointer-events: none; z-index: 1040;">
     <nav class="container glass rounded-pill px-4 py-2 d-flex justify-content-between align-items-center shadow-sm"
          style="pointer-events: auto; max-width: 1200px;">
-      
+
       <div class="d-flex align-items-center gap-3">
         <a href="{base}/" aria-label="Home" class="d-flex align-items-center gap-2 logo-group text-decoration-none">
           <img src="{base}/AxelLab-Logo.ico" alt="Logo" class="navbar-brand-logo" />
           <span class="fw-bold fs-5 d-none d-sm-inline" style="color: var(--color-accent);">AxelBase</span>
         </a>
-        
+
+        <!-- Buy Me a Coffee + Bitcoin Dropdown -->
         <div class="position-relative ms-2" use:clickOutside on:click_outside={closeDropdown}>
-          <button class="btn btn-coffee d-flex align-items-center gap-2" on:click={toggleDropdown}>
+          <button
+            class="btn btn-coffee d-flex align-items-center gap-2"
+            on:click={toggleDropdown}
+            aria-label="Support options"
+          >
             <i class="bi bi-cup-hot-fill"></i>
             <span class="d-none d-md-inline">Support</span>
           </button>
-          
+
           {#if isDropdownOpen}
-            <div class="bmac-dropdown glass" transition:slide={{ duration: 250 }}>
-              {#each donationAmounts as amount}
-                <a
-                  href="https://paypal.me/{paypalUsername}/{amount}"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  on:click={closeDropdown}
-                  class="bmac-option"
-                >
-                  ${amount}
-                </a>
-              {/each}
+            <div
+              class="bmac-dropdown glass mt-2"
+              transition:slide={{ duration: 220 }}
+              style="min-width: 220px; right: 0; left: auto;"
+            >
+              <!-- Fixed amounts via Buy Me a Coffee -->
+              <a href="{bmacLink}" target="_blank" rel="noopener" on:click={closeDropdown} class="bmac-option">
+                <span class="amount">☕ $3</span> One Coffee
+              </a>
+              <a href="{bmacLink}" target="_blank" rel="noopener" on:click={closeDropdown} class="bmac-option">
+                <span class="amount">☕☕ $5</span> Two Coffees
+              </a>
+              <a href="{bmacLink}" target="_blank" rel="noopener" on:click={closeDropdown} class="bmac-option">
+                <span class="amount">☕☕☕ $10</span> Three Coffees
+              </a>
+
+              <!-- Custom amount -->
+              <a
+                href="{bmacLink}"
+                target="_blank"
+                rel="noopener"
+                on:click={closeDropdown}
+                class="bmac-option custom-amount"
+              >
+                Custom Amount
+              </a>
+
+              <!-- Bitcoin -->
+              <a
+                href="bitcoin:bc1q3p0e6vt492m4w4fpz5m2cl4zcfuqqkgaj6myc9?label=AxelBase&message=Buy%20me%20a%20coffee"
+                target="_blank"
+                rel="noopener"
+                on:click={closeDropdown}
+                class="bmac-option custom-amount bitcoin-option"
+              >
+                ⚡ Bitcoin
+              </a>
             </div>
           {/if}
         </div>
@@ -108,29 +140,29 @@
 
       <div class="d-flex align-items-center gap-3">
         <ul class="nav d-none d-lg-flex align-items-center gap-3 m-0">
-            <li><a class="nav-link-custom" href="{base}/">Home</a></li>
-            <li><a class="nav-link-custom" href="{base}/#about">About</a></li>
-            <li><a class="nav-link-custom" href="{base}/#how-to">How to use</a></li>
-            <li><a class="nav-link-custom" href="{base}/#faq">FAQ</a></li>
-            <li><a class="nav-link-custom" href="{base}/blog">Blog</a></li>
+          <li><a class="nav-link-custom" href="{base}/">Home</a></li>
+          <li><a class="nav-link-custom" href="{base}/#about">About</a></li>
+          <li><a class="nav-link-custom" href="{base}/#how-to">How to use</a></li>
+          <li><a class="nav-link-custom" href="{base}/#faq">FAQ</a></li>
+          <li><a class="nav-link-custom" href="{base}/blog">Blog</a></li>
         </ul>
 
-        <button 
-            class="btn btn-theme-toggle" 
-            on:click={toggleTheme} 
-            aria-label="Toggle Dark Mode"
+        <button
+          class="btn btn-theme-toggle"
+          on:click={toggleTheme}
+          aria-label="Toggle Dark Mode"
         >
-            {#if currentTheme === 'dark'}
-                <i class="bi bi-sun-fill text-warning"></i>
-            {:else}
-                <i class="bi bi-moon-stars-fill text-primary"></i>
-            {/if}
+          {#if currentTheme === 'dark'}
+            <i class="bi bi-sun-fill text-warning"></i>
+          {:else}
+            <i class="bi bi-moon-stars-fill text-primary"></i>
+          {/if}
         </button>
-        
-        <button 
-          class="navbar-toggler d-lg-none border-0 bg-transparent" 
-          type="button" 
-          data-bs-toggle="collapse" 
+
+        <button
+          class="navbar-toggler d-lg-none border-0 bg-transparent"
+          type="button"
+          data-bs-toggle="collapse"
           data-bs-target="#mobileMenu"
           aria-label="Toggle navigation"
         >
@@ -149,7 +181,7 @@
   <footer class="custom-footer py-4 mt-auto position-relative" style="z-index: 1030;">
     <div class="container text-center text-muted">
       <div class="mb-2">
-        <span class="fw-bold" style="color: var(--color-accent);">AxelBase</span> &copy; {currentYear}
+        <span class="fw-bold" style="color: var(--color-accent);">AxelBase</span> © {currentYear}
       </div>
       <div class="d-flex justify-content-center gap-4 text-small">
         <a href="{base}/privacy" class="footer-link">Privacy Policy</a>
@@ -160,7 +192,76 @@
 </div>
 
 <style>
-  /* Navbar Animations */
+  /* ── Buy Me a Coffee / Support Dropdown ── */
+  .btn-coffee {
+    background: linear-gradient(45deg, #FFDD00, #FFC107);
+    color: #333;
+    font-weight: 700;
+    border: none;
+    box-shadow: 0 4px 15px rgba(255, 193, 7, 0.3);
+    transition: all 0.25s ease;
+  }
+
+  .btn-coffee:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 193, 7, 0.5);
+  }
+
+  .bmac-dropdown {
+    position: absolute;
+    top: 120%;
+    right: 0;
+    padding: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    min-width: 220px;
+    z-index: 1000;
+    border-radius: 16px;
+    font-size: 0.95rem;
+  }
+
+  .bmac-option {
+    padding: 10px 16px;
+    text-decoration: none;
+    color: var(--color-text-main);
+    font-weight: 500;
+    border-radius: 10px;
+    transition: all 0.2s ease;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .bmac-option:hover {
+    background: var(--color-accent);
+    color: white;
+  }
+
+  .bmac-option .amount {
+    font-weight: 700;
+    color: #FFC107;
+    min-width: 70px;
+  }
+
+  .custom-amount {
+    font-weight: 600;
+    color: var(--color-accent);
+    border-top: 1px solid var(--glass-border);
+    margin-top: 6px;
+    padding-top: 12px !important;
+    justify-content: center !important;
+  }
+
+  .bitcoin-option {
+    color: #f7931a !important;
+  }
+
+  .bitcoin-option:hover {
+    background: #f7931a !important;
+    color: white !important;
+  }
+
+  /* Rest of your existing styles remain here... */
   .navbar-brand-logo {
     height: 40px;
     width: auto;
@@ -168,7 +269,6 @@
   }
   .logo-group:hover .navbar-brand-logo { transform: rotate(10deg); }
 
-  /* Nav Links */
   .nav-link-custom {
     color: var(--color-text-main);
     text-decoration: none;
@@ -190,7 +290,6 @@
   .nav-link-custom:hover { color: var(--color-accent); }
   .nav-link-custom:hover::after { width: 100%; }
 
-  /* Theme Toggle */
   .btn-theme-toggle {
     background: rgba(0,0,0,0.05);
     border: 1px solid var(--glass-border);
@@ -207,43 +306,6 @@
     transform: rotate(15deg);
   }
 
-  /* Buy Me A Coffee */
-  .btn-coffee {
-    background: linear-gradient(45deg, #FFDD00, #FFC107);
-    color: #333;
-    font-weight: 700;
-    border: none;
-    box-shadow: 0 4px 15px rgba(255, 193, 7, 0.3);
-  }
-  .btn-coffee:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(255, 193, 7, 0.5);
-  }
-  .bmac-dropdown {
-    position: absolute;
-    top: 120%;
-    left: 0;
-    padding: 0.5rem;
-    display: flex;
-    flex-direction: column;
-    min-width: 120px;
-    z-index: 1000;
-    border-radius: 15px;
-  }
-  .bmac-option {
-    padding: 8px 16px;
-    text-decoration: none;
-    color: var(--color-text-main);
-    font-weight: 600;
-    border-radius: 10px;
-    text-align: center;
-    transition: background 0.2s;
-  }
-  .bmac-option:hover {
-    background-color: var(--color-accent);
-    color: white;
-  }
-  
   .footer-link { color: var(--color-text-muted); text-decoration: none; }
   .footer-link:hover { color: var(--color-accent); }
 </style>
